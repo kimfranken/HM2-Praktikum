@@ -1,0 +1,37 @@
+#!/gnuplot
+set terminal windows 
+set output
+
+set size 1.0,1.0 
+#set terminal png 
+#set output "MPlot.png" 
+set multiplot 
+#Für den 1. Plot (links unten) die Plotdaten setzen und plotten
+	set xrange [-10:10] #(Bereich X-Achse setzen)
+	set size 0.5,0.5 #(Setzen der Teilplotgröße -> ¼ Skalierung)
+	set origin 0.0,0.0 #(linker, unterer Zeichnungspunkt auf 0.0,0.0)
+	set grid #(Gitterlinien einschalten)
+	plot sin(x)+x/2 #(Plot erzeugen)
+	unset grid #(Gitterlinien ausschalten)
+# 2. Plot erzeugen (rechts unten). Alle nicht geänderten Einstellungen bleiben bestehen.
+	set origin 0.5,0.0 #(linker, untere Zeichnungspunkt auf 0.5,0.0)
+	set title "gestörter cosinus"
+	plot cos(x)+sin(50*x)/4 #(Plot erzeugen)
+#3. Plot erzeugen (oben).
+	set origin 0.0,0.5 #(linker, unterer Zeichnungspunkt auf 0.0,0.5)
+	set size 1.0,0.5 #(Setzen der Teilplotgröße -> ½ Skalierung)
+	set title "Multiplot" #(Überschrift)
+	set xrange [0.1:40] #(Bereich X-Achse setzen)
+	set logscale x #(X-Achse in logarithmischer Darstellung)
+	set grid #(Gitterlinien einschalten)
+	plot exp(-1/x) #(Plot erzeugen)
+
+unset logscale x #(Logarithmische Darstellung der X-Achse ausschalten)
+unset grid #(Gitterlinien ausschalten
+set title #(Überschrift rücksetzen)
+unset multiplot #(Multiplot deaktivieren)
+
+set terminal windows
+
+ 
+#    EOF
