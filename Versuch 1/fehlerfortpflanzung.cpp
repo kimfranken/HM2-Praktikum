@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <cmath>
@@ -25,17 +27,27 @@
 using namespace std;
 int main ()
 {
+
+  cout << "PI = " << M_PI << endl;
+
   fstream file;
+  fstream file1;
   file.open("V_1.txt", ios::out);
+  file1.open("V_1_scientific.txt", ios::out);
 
   long double V_1[41] = {M_2_PI, M_1_PI};
 
   file << setw( 2 ) << 0 << "\t" << fixed << setw( 40 ) << setprecision(std::numeric_limits<long double>::digits10 + 1) << V_1[0]  << endl;
   file << setw( 2 ) << 1 << "\t" << fixed << setw( 40 ) << setprecision(std::numeric_limits<long double>::digits10 + 1) << V_1[1]  << endl;
 
+  file1 << setw( 2 ) << 0 << "\t" << scientific << setw( 50 ) << setprecision(45) << V_1[0]  << endl;
+  file1 << setw( 2 ) << 1 << "\t" << scientific << setw( 50 ) << setprecision(45) << V_1[1]  << endl;
+
   for (int n = 2; n <= 40; n++) {
     V_1[n] = M_1_PI - V_1[n-2]*n*(n-1)/(M_PI*M_PI);
-    file << setw( 2 ) << n << "\t"  << fixed << setw( 40 ) << setprecision(std::numeric_limits<long double>::digits10 + 1) << V_1[n]  << endl;
+    file << setw( 2 ) << n << "\t"  << fixed << setw( 50 ) << setprecision(std::numeric_limits<long double>::digits10 + 1) << V_1[n]  << endl;
+    file1 << setw( 2 ) << n << "\t"  << scientific << setw( 50 ) << setprecision(45) << V_1[n]  << endl;
+
   }
 
   file.close();
