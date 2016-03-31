@@ -30,11 +30,9 @@ int main ()
   float pi_f = M_PI;
   double pi_d = M_PI;
   long double pi_l = M_PI;
-  cout.precision(50);
-  cout << "Const Pi:\t" << fixed << M_PI << endl;
-  cout << "Float Pi:\t" << fixed << pi_f << endl;
-  cout << "Double Pi:\t" << fixed << pi_d << endl;
-  cout << "Long Pi:\t" << fixed << pi_l << endl;
+  cout.precision(std::numeric_limits<double>::digits10 + 1);
+  cout << "Double Pi:\t" << pi_d << endl;
+  cout << "Fixed Pi:\t" << fixed << pi_d << endl;
 
   return 0;
 }
