@@ -18,6 +18,7 @@ set grid
 set xrange[0:60]
 
 set title "V_2 log"
+unset yrange
 set logscale y
 plot "V_2.txt" using 1:2
 pause -1
