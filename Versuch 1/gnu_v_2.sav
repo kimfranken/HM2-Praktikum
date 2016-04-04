@@ -26,3 +26,4 @@ pause -1
 set xrange[0:25]
 set title "V_2 - V_1 log"
 plot "V_2_V_1.txt" using 1:2
+unset logscale y
