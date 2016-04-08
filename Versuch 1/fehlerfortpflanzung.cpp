@@ -28,6 +28,8 @@ using namespace std;
 int main ()
 {
 
+  // V_1 #######################################################################
+
   fstream file;
   fstream file1;
   file.open("V_1.txt", ios::out);
@@ -42,14 +44,20 @@ int main ()
   file1 << setw( 2 ) << 1 << "\t" << scientific << setw( 50 ) << setprecision(45) << V_1[1]  << endl;
 
   for (int n = 2; n <= 40; n++) {
+
     V_1[n] = M_1_PI - V_1[n-2]*n*(n-1)/(M_PI*M_PI);
+
     file << setw( 2 ) << n << "\t"  << setw( 40 ) << setprecision(std::numeric_limits<long double>::digits10 + 1) << V_1[n]  << endl;
     file1 << setw( 2 ) << n << "\t"  << scientific << setw( 50 ) << setprecision(45) << V_1[n]  << endl;
 
   }
 
   file.close();
+
+  // V_1 # ENDE ################################################################
+
   /*
+  // float Test, selbe Resultate -> Nachfragen
   fstream file_float;
   file_float.open("V_1_float.txt", ios::out);
 
@@ -66,6 +74,8 @@ int main ()
   file_float.close();
   */
 
+  // V_2 #######################################################################
+
   fstream file_2;
   file_2.open("V_2.txt", ios::out);
 
@@ -76,12 +86,16 @@ int main ()
   file_2 << setw( 2 ) << 60 << "\t" << setw( 40 ) << setprecision(std::numeric_limits<long double>::digits10 + 1) << V_2[60]  << endl;
   file_2 << setw( 2 ) << 59 << "\t" << setw( 40 ) << setprecision(std::numeric_limits<long double>::digits10 + 1) << V_2[59]  << endl;
 
-  for (int n = 60; n >= 2; n--) {
+  for (int n = 60; n >= 2; n--){
     V_2[n-2] = M_PI*(1 - M_PI*V_2[n])/(n*(n-1));
     file_2 << setw( 2 ) << n-2 << "\t" << setw( 40 ) << setprecision(std::numeric_limits<long double>::digits10 + 1) << V_2[n-2]  << endl;
   }
 
   file_2.close();
+
+  // V_2 # ENDE ################################################################
+
+  // V_2 - V_1 #################################################################
 
   fstream file_3;
   file_3.open("V_2_V_1.txt", ios::out);
@@ -94,6 +108,8 @@ int main ()
   }
 
   file_3.close();
+
+  // V_2 - V_1 # ENDE ##########################################################
 
   return 0;
 }
