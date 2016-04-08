@@ -15,14 +15,13 @@
 
 set style data linespoints
 set grid
+unset yrange
 set xrange[0:40]
 
 set title "V_1"
-plot "V_1.txt" using 1:2
+plot "V_1_scientific.txt" using 1:2
 pause -1
 
-set autoscale y
-set yrange[-0.5:0.8]
+set yrange[-0.2:0.8]
 set title "V_1 sinnvoll"
-plot "V_1.txt" using 1:2
-unset logscale y
+plot "V_1_scientific.txt" using 1:2
