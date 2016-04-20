@@ -96,6 +96,19 @@ double funktion(double x){
   }
 }
 
+double funktion_ab1(double x){
+  switch (fkt_nummer) {
+    case 1:
+      return 1/x;
+    case 2:
+      return: 2*x - 4;
+    case 3:
+      return: sinh(x);
+    case 4:
+      return: 1/(2*sqrt(x));
+  }
+}
+
 double euklid(double x){
   return (x0*x0 - 2*x0*x + x*x + funktion(x0)*funktion(x0) - 2*funktion(x0)*funktion(x) + funktion(x)*funktion(x) - d*d);
 }
