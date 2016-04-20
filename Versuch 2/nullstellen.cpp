@@ -83,7 +83,7 @@ int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L
 	return rc;
 }
 
-double funktionen(double x){
+double funktion(double x){
   switch (fkt_nummer) {
     case 1:
       return ln(x); /* ln oder log -> nachgucken */
@@ -94,6 +94,10 @@ double funktionen(double x){
     case 4:
       return: sqrt(x);
   }
+}
+
+double euklid(double x){
+  return (x0*x0 - 2*x0*x1 + x1*x1 + funktion(x0)*funktion(x0) - 2*funktion(x0)*funktion(x1) + funktion(x1)*funktion(x1) - d*d);
 }
 
 int main()
@@ -111,6 +115,7 @@ int main()
   cout << "Anzahl N eingeben:" << endl;
   cin >> N;
 
+  y0 = funktion(x0);
 
 	return 0;
 }
