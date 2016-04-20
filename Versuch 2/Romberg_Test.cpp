@@ -1,7 +1,7 @@
-// Romberg_Test.cpp : Definiert den Einstiegspunkt für die Konsolenanwendung.
+// Romberg_Test.cpp : Definiert den Einstiegspunkt fï¿½r die Konsolenanwendung.
 //
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include <stdio.h>
 #include <cmath>
 #include <stdlib.h>
@@ -48,7 +48,7 @@ int main()
 }
 
 int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L_out, int &fcnt, double &Q){
-	/* Näherungsweise Berechnung des Integrals über f von a bis b: I(f;a,b)
+	/* Nï¿½herungsweise Berechnung des Integrals ï¿½ber f von a bis b: I(f;a,b)
 	% mit dem Romberg-Schema mit max. L_in Stufen.
 	%
 	% Eingabe:
@@ -58,20 +58,20 @@ int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L
 	% tol  : reelle Zahl; Genauigkeitstoleranz: |I(f;a,b)-Q|<=tol*(1+|Q|)
 	% L_in : Integer; max. Anzahl Stufen im Romberg-Schema
 	% Ausgabe:
-	% rc    : Integer; rc=0; Q wurde in gewünschter Genauigkeit berechnet.
-	%                  rc=1; Q ist nicht genau genug. Es würden evtl. mehr Stufen (als L_in) benötigt.
+	% rc    : Integer; rc=0; Q wurde in gewï¿½nschter Genauigkeit berechnet.
+	%                  rc=1; Q ist nicht genau genug. Es wï¿½rden evtl. mehr Stufen (als L_in) benï¿½tigt.
 	%                  rc=2; Eingabefehler: tol <=0
-	% Q     : relle Zahl; Näherungswert für das Integral I(f;a,b)
+	% Q     : relle Zahl; Nï¿½herungswert fï¿½r das Integral I(f;a,b)
 	% L_out : Integer; Anzahl genutzter Stufen
 	%
 	%------- R. Reuter ----- 24.03.2016 --------------------------------------*/
 	double Q1 = 0., E = 0., h = 0., ah = 0.;
-	int n = 10; // Anzahl initialer Teilintervalle für ST-Formel
+	int n = 10; // Anzahl initialer Teilintervalle fï¿½r ST-Formel
 	int rc = 1; // Return Code
 	double Fak = 1.0;
 	int Lmax = L_in; // max. Anzahl Stufen
 	int L = 0;
-	double *QQ = new double[Lmax + 1]; // Array zum Speichern der jeweils aktuellen Zeile 
+	double *QQ = new double[Lmax + 1]; // Array zum Speichern der jeweils aktuellen Zeile
 	// des Romberg-Schemas
 
 	if (tol <= 0.){
