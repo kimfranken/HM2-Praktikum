@@ -96,8 +96,8 @@ double funktion(double x){
   }
 }
 
-double euklid(double x0, double x1){
-  return (x0*x0 - 2*x0*x1 + x1*x1 + funktion(x0)*funktion(x0) - 2*funktion(x0)*funktion(x1) + funktion(x1)*funktion(x1) - d*d);
+double euklid(double x){
+  return (x0*x0 - 2*x0*x + x*x + funktion(x0)*funktion(x0) - 2*funktion(x0)*funktion(x) + funktion(x)*funktion(x) - d*d);
 }
 
 double newton(double xn, double(*f)(double), double(*f_ab)(double))
