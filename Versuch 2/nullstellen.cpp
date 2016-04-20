@@ -86,13 +86,13 @@ int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L
 double funktion(double x){
   switch (fkt_nummer) {
     case 1:
-      return ln(x); /* ln oder log -> nachgucken */
+      return log(x); /* ln oder log -> nachgucken */
     case 2:
-      return: (x-2)*(x-2);
+      return (x-2)*(x-2);
     case 3:
-      return: cosh(x);
+      return cosh(x);
     case 4:
-      return: sqrt(x);
+      return sqrt(x);
   }
 }
 
@@ -101,11 +101,11 @@ double funktion_ab1(double x){
     case 1:
       return 1/x;
     case 2:
-      return: 2*x - 4;
+      return 2*x - 4;
     case 3:
-      return: sinh(x);
+      return sinh(x);
     case 4:
-      return: 1/(2*sqrt(x));
+      return 1/(2*sqrt(x));
   }
 }
 
@@ -114,23 +114,27 @@ double euklid(double x){
 }
 
 double euklid_ab(double x){
-  return (- 2*x0 + 2*x - 2*funktion(x0)*funktion_ab1(x) + 2*funktion(x)*funktion_ab1(x) - d*d);
+  return (- 2*x0 + 2*x - 2*funktion(x0)*funktion_ab1(x) + 2*funktion(x)*funktion_ab1(x));
 }
 
 double newton(double xn, double(*f)(double), double(*f_ab)(double))
 {
   double x;
 
-  for (int i = 0; i < 20; i++)
+  for (int i = 0; i < 100; i++)
   {
     x = xn - f(xn)/f_ab(xn);
     xn = x;
+    if (abs(xn - x) <= 10e-10){
+    	return x;
+    }
   }
 
 }
 
 int main()
 {
+  double y0, xn, yn;
   cout << "(1) ln(x)"<< endl;
   cout << "(2) (x-2)^2"<< endl;
   cout << "(3) cosh(x)"<< endl;
@@ -145,6 +149,14 @@ int main()
   cin >> N;
 
   y0 = funktion(x0);
+  xn = newton(x0 + d, euklid, euklid_ab);
+  yn = funktion(xn);
+
+  cout << xn << endl;
+  cout << yn << endl;
+  cout << "d:" << sqrt((x0-xn)*(x0-xn) + (y0-yn)*(y0-yn)) << endl;
+
+
 
 	return 0;
 }
