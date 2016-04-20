@@ -100,6 +100,10 @@ double euklid(double x){
   return (x0*x0 - 2*x0*x + x*x + funktion(x0)*funktion(x0) - 2*funktion(x0)*funktion(x) + funktion(x)*funktion(x) - d*d);
 }
 
+double euklid_ab(double x){
+  return (- 2*x0 + 2*x - 2*funktion(x0)*funktion_ab1(x) + 2*funktion(x)*funktion_ab1(x) - d*d);
+}
+
 double newton(double xn, double(*f)(double), double(*f_ab)(double))
 {
   double x;
