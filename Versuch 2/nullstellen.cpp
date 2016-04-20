@@ -6,8 +6,8 @@
 
 using namespace std;
 const double PI = 4.*atan(1.);
-int fkt_nummer, d, N;
-double x0;
+int fkt_nummer, d, N, fcnt;
+double x0, xk, bogenstuecklaenge;
 
 int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L_out, int &fcnt, double &Q){
 	/* N�herungsweise Berechnung des Integrals �ber f von a bis b: I(f;a,b)
@@ -117,8 +117,11 @@ double euklid_ab(double x){
   return (- 2*x0 + 2*x - 2*funktion(x0)*funktion_ab1(x) + 2*funktion(x)*funktion_ab1(x));
 }
 
-double newton(double xn, double(*f)(double), double(*f_ab)(double))
-{
+double bogenlaenge_funktion(double x){
+  return sqrt(1 + funktion_ab1(x)*funktion_ab1(x));
+}
+
+double newton(double xn, double(*f)(double), double(*f_ab)(double)){
   double x;
 
   for (int i = 0; i < 100; i++)
@@ -152,10 +155,18 @@ int main()
   xn = newton(x0 + d, euklid, euklid_ab);
   yn = funktion(xn);
 
+  /*
   cout << xn << endl;
   cout << yn << endl;
-  cout << "d:" << sqrt((x0-xn)*(x0-xn) + (y0-yn)*(y0-yn)) << endl;
+  cout << "d:" << sqrt((x0-xn)*(x0-xn) + (y0-yn)*(y0-yn)) << endl; // Testen ob d richtig ist
+  */
 
+  xk = x0;
+  int L_out;
+  double rc = Romberg(bogenlaenge_funktion, xk, xn, 10e-14, 20, L_out, fcnt, bogenstuecklaenge);
+  bogenstuecklaenge = bogenstuecklaenge/N;
+
+  cout << "Bogenstücklänge:" << bogenstuecklaenge << endl;
 
 
 	return 0;
