@@ -83,7 +83,7 @@ int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L
 	return rc;
 }
 
-double funktion(double x){
+double f(double x){
   switch (fkt_nummer) {
     case 1:
       return log(x); /* ln oder log -> nachgucken */
@@ -96,7 +96,7 @@ double funktion(double x){
   }
 }
 
-double funktion_ab1(double x){
+double d1f(double x){
   switch (fkt_nummer) {
     case 1:
       return 1/x;
@@ -110,15 +110,15 @@ double funktion_ab1(double x){
 }
 
 double euklid(double x){
-  return (x0*x0 - 2*x0*x + x*x + funktion(x0)*funktion(x0) - 2*funktion(x0)*funktion(x) + funktion(x)*funktion(x) - d*d);
+  return (x0*x0 - 2*x0*x + x*x + f(x0)*f(x0) - 2*f(x0)*f(x) + f(x)*f(x) - d*d);
 }
 
 double euklid_ab(double x){
-  return (- 2*x0 + 2*x - 2*funktion(x0)*funktion_ab1(x) + 2*funktion(x)*funktion_ab1(x));
+  return (- 2*x0 + 2*x - 2*f(x0)*d1f(x) + 2*f(x)*d1f(x));
 }
 
 double bogenlaenge_funktion(double x){
-  return sqrt(1 + funktion_ab1(x)*funktion_ab1(x));
+  return sqrt(1 + d1f(x)*d1f(x));
 }
 
 double newton(double xn, double(*f)(double), double(*f_ab)(double)){
@@ -151,9 +151,9 @@ int main()
   cout << "Anzahl N eingeben:" << endl;
   cin >> N;
 
-  y0 = funktion(x0);
+  y0 = f(x0);
   xn = newton(x0 + d, euklid, euklid_ab);
-  yn = funktion(xn);
+  yn = f(xn);
 
   /*
   cout << xn << endl;
