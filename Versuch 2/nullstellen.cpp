@@ -83,6 +83,14 @@ int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L
 	return rc;
 }
 
+double romberg_newton(double x){
+	double tol = 10e-14, Q, rc;
+	int L_out;
+
+	rc = Romberg(bogenlaenge_integrant, xk, x, tol, 20, L_out, fcnt, Q);
+	return Q - bogenstuecklaenge;
+}
+
 double f(double x){
   switch (fkt_nummer) {
     case 1:
@@ -117,7 +125,7 @@ double euklid_ab(double x){
   return (- 2*x0 + 2*x - 2*f(x0)*d1f(x) + 2*f(x)*d1f(x));
 }
 
-double bogenlaenge_funktion(double x){
+double bogenlaenge_integrant(double x){
   return sqrt(1 + d1f(x)*d1f(x));
 }
 
@@ -137,6 +145,7 @@ double newton(double xn, double(*f)(double), double(*f_ab)(double)){
 
 int main()
 {
+	// 2.1 a)
   double y0, xn, yn;
   cout << "(1) ln(x)"<< endl;
   cout << "(2) (x-2)^2"<< endl;
@@ -151,6 +160,7 @@ int main()
   cout << "Anzahl N eingeben:" << endl;
   cin >> N;
 
+	// 2.1 b)
   y0 = f(x0);
   xn = newton(x0 + d, euklid, euklid_ab);
   yn = f(xn);
@@ -163,11 +173,24 @@ int main()
 
   xk = x0;
   int L_out;
-  double rc = Romberg(bogenlaenge_funktion, xk, xn, 10e-14, 20, L_out, fcnt, bogenstuecklaenge);
+  double rc = Romberg(bogenlaenge_integrant, xk, xn, 10e-14, 20, L_out, fcnt, bogenstuecklaenge);
   bogenstuecklaenge = bogenstuecklaenge/N;
 
   cout << "Bogenstücklänge:" << bogenstuecklaenge << endl;
 
+	// 2.1 c)
+	double X[N+1], Y[N+1]
+	Xk[0] = x0;
+	Yk[0] = y0;
+
+	for (int i = 0; i < N; i++) {
+		X[i+1] = newton(start, romberg_newton, bogenlaenge_integrant)
+		Y[i+1] = f(X[i+1]);
+	}
+
+	// 2.1 e)
+	px = (x0 + X[N]) / 2;
+	py = (y0 + Y[N]) / 2;
 
 	return 0;
 }
