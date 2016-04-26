@@ -83,14 +83,6 @@ int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L
 	return rc;
 }
 
-double romberg_newton(double x){
-	double tol = 10e-14, Q, rc;
-	int L_out;
-
-	rc = Romberg(bogenlaenge_integrant, xk, x, tol, 20, L_out, fcnt, Q);
-	return Q - bogenstuecklaenge;
-}
-
 double f(double x){
   switch (fkt_nummer) {
     case 1:
@@ -143,6 +135,17 @@ double newton(double xn, double(*f)(double), double(*f_ab)(double)){
 
 }
 
+double romberg_newton(double x){
+	/*
+		Gibt (Q-gewünschte Bogenstuecklänge) zurück, um dies in newton zu verwenden.
+	*/
+	double tol = 10e-14, Q, rc;
+	int L_out;
+
+	rc = Romberg(bogenlaenge_integrant, xk, x, tol, 20, L_out, fcnt, Q);
+	return Q - bogenstuecklaenge;
+}
+
 int main()
 {
 	// 2.1 a)
@@ -162,8 +165,13 @@ int main()
 
 	// 2.1 b)
   y0 = f(x0);
+	cout << "(x0,y0): (" << x0 << "," << y0 << ")" << endl;
+
   xn = newton(x0 + d, euklid, euklid_ab);
   yn = f(xn);
+
+	cout << "(xn,yn): (" << xn << "," << yn << ")" << endl;
+
 
   /*
   cout << xn << endl;
@@ -174,23 +182,38 @@ int main()
   xk = x0;
   int L_out;
   double rc = Romberg(bogenlaenge_integrant, xk, xn, 10e-14, 20, L_out, fcnt, bogenstuecklaenge);
-  bogenstuecklaenge = bogenstuecklaenge/N;
+	cout << "Bogenlänge:" << bogenstuecklaenge << endl;
 
+  bogenstuecklaenge = bogenstuecklaenge/N;
   cout << "Bogenstücklänge:" << bogenstuecklaenge << endl;
 
 	// 2.1 c)
-	double X[N+1], Y[N+1]
-	Xk[0] = x0;
-	Yk[0] = y0;
+	double X[N+1], Y[N+1];
+	X[0] = x0;
+	Y[0] = y0;
 
 	for (int i = 0; i < N; i++) {
-		X[i+1] = newton(start, romberg_newton, bogenlaenge_integrant)
+		// x_quer berechnen mit Pythagoras und Steigung
+		double x_quer = X[i] + bogenstuecklaenge/sqrt(1 + d1f(X[i])*d1f(X[i]));
+		double y_quer = f(x_quer);
+
+		// x_dach berechnen mit Pythagoras und Steigung
+		double m = (f(x_quer) - f(X[i])) / (x_quer - X[i]);
+		double x_dach = X[i] + bogenstuecklaenge/sqrt(1 + m*m); // evtl noch falsch!
+
+		X[i+1] = newton(x_dach, romberg_newton, bogenlaenge_integrant);
 		Y[i+1] = f(X[i+1]);
+		xk = X[i + 1]; // für romberg_newton setzten
 	}
 
 	// 2.1 e)
+	double px, py;
 	px = (x0 + X[N]) / 2;
 	py = (y0 + Y[N]) / 2;
+
+	cout << "Mitte: (" << px << "," << py << ")" << endl;
+	cout << "(X[N],Y[N]): (" << X[N] << "," << Y[N] << ")" << endl;
+
 
 	return 0;
 }
