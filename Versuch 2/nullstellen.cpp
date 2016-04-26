@@ -172,7 +172,6 @@ int main()
 
 	cout << "(xn,yn): (" << xn << "," << yn << ")" << endl;
 
-
   /*
   cout << xn << endl;
   cout << yn << endl;
@@ -213,6 +212,18 @@ int main()
 
 	cout << "Mitte: (" << px << "," << py << ")" << endl;
 	cout << "(X[N],Y[N]): (" << X[N] << "," << Y[N] << ")" << endl;
+
+	// 2.1 f)
+	double Winkel[N+1], Radius[N+1];
+
+	double a_x = x0 - px;
+	double a_y = y0 - py;
+	for (int i = 0; i <= N; i++) {
+		Radius[i] = sqrt((px - X[i])*(px - X[i]) + (py-Y[i])*(py-Y[i]));
+		double b_x = X[i] - px;
+		double b_y = X[i] - py;
+		Winkel[i] = acos((a_x * b_x + a_y * b_y) / (Radius[i]*d/2)) * (180/PI);
+	}
 
 
 	return 0;
