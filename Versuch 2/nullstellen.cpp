@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <float.h>
 #include <iostream>
+#include <string>
 
 using namespace std;
 const double PI = 4.*atan(1.);
-int fkt_nummer, d, N, fcnt;
+int f_nummer, d, N, fcnt;
+string f_name = "error";
 double x0, xk, bogenstuecklaenge;
 
 int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L_out, int &fcnt, double &Q){
@@ -84,9 +86,9 @@ int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L
 }
 
 double f(double x){
-  switch (fkt_nummer) {
+  switch (f_nummer) {
     case 1:
-      return log(x); /* ln oder log -> nachgucken */
+      return log(x);
     case 2:
       return (x-2)*(x-2);
     case 3:
@@ -97,7 +99,7 @@ double f(double x){
 }
 
 double d1f(double x){
-  switch (fkt_nummer) {
+  switch (f_nummer) {
     case 1:
       return 1/x;
     case 2:
@@ -155,7 +157,17 @@ int main()
   cout << "(3) cosh(x)"<< endl;
   cout << "(4) sqrt(x)"<< endl;
   cout << "Funktion durch Eingabe der jeweiligen Nummer wählen:" << endl;
-  cin >> fkt_nummer;
+  cin >> f_nummer;
+  switch (f_nummer) {
+    case 1:
+      f_name = "log(x)";
+    case 2:
+      f_name = "(x-2)^2";
+    case 3:
+      f_name = "cosh(x)";
+    case 4:
+      f_name = "sqrt(x)";
+  }
   cout << "Abstand d eingeben:" << endl;
   cin >> d;
   cout << "Startwert x0 eingeben:" << endl;
@@ -225,6 +237,10 @@ int main()
 		Winkel[i] = acos((a_x * b_x + a_y * b_y) / (Radius[i]*d/2)) * (180/PI);
 	}
 
+	// 2.2 Ausgabe
+
+	cout << "f(x) = " << f_name << "; N = " << N << "; x0 = " << x0 << "; d = " << d << endl;
+	
 
 	return 0;
 }
