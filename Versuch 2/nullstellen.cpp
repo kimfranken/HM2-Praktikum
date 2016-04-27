@@ -276,12 +276,12 @@ int main()
 		Radius[i] = sqrt((px - X[i])*(px - X[i]) + (py-Y[i])*(py-Y[i]));
 		double b_x = X[i] - px;
 		double b_y = Y[i] - py;
-		
+
 		if(i != 0 && i != N){
 			Winkel[i] = acos(((a_x * b_x) + (a_y * b_y)) / (Radius[i]*d/2)) * (180.0 / PI);
 		}
 
-		file1 << setw(3) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(4) << setprecision(0) << Fcnt[i] << setw(2) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << endl;
+		file1 << setw(3) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(4) << setprecision(0) << Fcnt[i] << setw(4) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << endl;
 	}
 
 	file1.close();
