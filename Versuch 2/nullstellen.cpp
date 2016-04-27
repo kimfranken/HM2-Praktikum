@@ -3,13 +3,19 @@
 #include <stdlib.h>
 #include <float.h>
 #include <iostream>
+#include <iomanip>
+#include <fstream>
 #include <string>
+
+#define WIDTH 20
+#define PREC 15
 
 using namespace std;
 const double PI = 4.*atan(1.);
-int f_nummer, d, N, fcnt;
+int f_nummer, d, N, fcnt, its;
 string f_name = "error";
-double x0, xk, bogenstuecklaenge;
+double x0, xk, bogenlaenge, bogenstuecklaenge;
+double tol = 1e-14;
 
 int Romberg(double(*f)(double), double a, double b, double tol, int L_in, int &L_out, int &fcnt, double &Q){
 	/* N�herungsweise Berechnung des Integrals �ber f von a bis b: I(f;a,b)
@@ -123,25 +129,27 @@ double bogenlaenge_integrant(double x){
   return sqrt(1 + d1f(x)*d1f(x));
 }
 
-double newton(double xn, double(*f)(double), double(*f_ab)(double)){
+double newton(double xn, double(*f)(double), double(*d1f)(double)){
   double x;
 
-  for (int i = 0; i < 100; i++)
+  for (int i = 1; i < 300; i++)
   {
-    x = xn - f(xn)/f_ab(xn);
-    xn = x;
+    x = xn - f(xn)/d1f(xn);
     if (abs(xn - x) <= 10e-10){
+			its = i;
     	return x;
     }
-  }
+		xn = x;
 
+		// evtl Error einbauen, wenn 300 erreicht.
+  }
 }
 
 double romberg_newton(double x){
 	/*
 		Gibt (Q-gewünschte Bogenstuecklänge) zurück, um dies in newton zu verwenden.
 	*/
-	double tol = 10e-14, Q, rc;
+	double Q, rc;
 	int L_out;
 
 	rc = Romberg(bogenlaenge_integrant, xk, x, tol, 20, L_out, fcnt, Q);
@@ -155,53 +163,74 @@ int main()
   cout << "(1) ln(x)"<< endl;
   cout << "(2) (x-2)^2"<< endl;
   cout << "(3) cosh(x)"<< endl;
-  cout << "(4) sqrt(x)"<< endl;
-  cout << "Funktion durch Eingabe der jeweiligen Nummer wählen:" << endl;
+  cout << "(4) sqrt(x)"<< endl << endl;
+  cout << "Funktion durch Eingabe der jeweiligen Nummer wählen: ";
   cin >> f_nummer;
   switch (f_nummer) {
     case 1:
-      f_name = "log(x)";
+      f_name = "ln(x)";
+			break;
     case 2:
       f_name = "(x-2)^2";
+			break;
     case 3:
       f_name = "cosh(x)";
+			break;
     case 4:
       f_name = "sqrt(x)";
+			break;
+		case 0:
+			f_name = "ln(x)";
+			break;
+		default:
+			f_name = "ERROR";
   }
-  cout << "Abstand d eingeben:" << endl;
-  cin >> d;
-  cout << "Startwert x0 eingeben:" << endl;
-  cin >> x0;
-  cout << "Anzahl N eingeben:" << endl;
-  cin >> N;
+	if(f_nummer == 0){
+		d = 9;
+		x0 = 0.09;
+		N = 18;
+		f_nummer = 1;
+	}
+	else if (f_nummer > 0 && f_nummer < 5){
+		cout << "Abstand d eingeben: ";
+	  cin >> d;
+	  cout << "Startwert x0 eingeben: ";
+	  cin >> x0;
+	  cout << "Anzahl N eingeben: ";
+	  cin >> N;
+	}
+	else {
+		cout << "Keine Funktion für Eingabe " << f_nummer << " bekannt. Abbruch." << endl;
+		return 1;
+	}
 
 	// 2.1 b)
   y0 = f(x0);
-	cout << "(x0,y0): (" << x0 << "," << y0 << ")" << endl;
+	// cout << "(x0,y0): (" << x0 << "," << y0 << ")" << endl;
 
   xn = newton(x0 + d, euklid, euklid_ab);
   yn = f(xn);
 
-	cout << "(xn,yn): (" << xn << "," << yn << ")" << endl;
 
-  /*
-  cout << xn << endl;
-  cout << yn << endl;
-  cout << "d:" << sqrt((x0-xn)*(x0-xn) + (y0-yn)*(y0-yn)) << endl; // Testen ob d richtig ist
-  */
+	cout << endl << "f(x) = " << f_name << "; N = " << N << "; x0 = " << x0 << "; d = " << d << endl;
+	cout << "Endpunkt = (xn,yn) = (" << xn << "," << yn << "); Startwert = " << x0 + d << "; Its = " << its << endl;
+
+  // cout << "d:" << sqrt((x0-xn)*(x0-xn) + (y0-yn)*(y0-yn)) << endl; // Testen ob d richtig ist
 
   xk = x0;
   int L_out;
-  double rc = Romberg(bogenlaenge_integrant, xk, xn, 10e-14, 20, L_out, fcnt, bogenstuecklaenge);
-	cout << "Bogenlänge:" << bogenstuecklaenge << endl;
+  double rc = Romberg(bogenlaenge_integrant, xk, xn, tol, 20, L_out, fcnt, bogenlaenge);
+  bogenstuecklaenge = bogenlaenge/N;
 
-  bogenstuecklaenge = bogenstuecklaenge/N;
-  cout << "Bogenstücklänge:" << bogenstuecklaenge << endl;
+	cout << "B(f;x0,xn) = " << bogenlaenge << "; Fehlertoleranz = " << tol << endl;
 
 	// 2.1 c)
-	double X[N+1], Y[N+1];
+	double X[N+1], Y[N+1], X_Start_1[N+1], X_Start_2[N+1], Fcnt[N+1];
 	X[0] = x0;
 	Y[0] = y0;
+	X_Start_1[0] = x0;
+	X_Start_2[0] = x0;
+	Fcnt[0] = 0;
 
 	for (int i = 0; i < N; i++) {
 		// x_quer berechnen mit Pythagoras und Steigung
@@ -215,6 +244,10 @@ int main()
 		X[i+1] = newton(x_dach, romberg_newton, bogenlaenge_integrant);
 		Y[i+1] = f(X[i+1]);
 		xk = X[i + 1]; // für romberg_newton setzten
+
+		Fcnt[i+1] = fcnt;
+		X_Start_1[i+1] = x_quer;
+		X_Start_2[i+1] = x_dach;
 	}
 
 	// 2.1 e)
@@ -222,25 +255,30 @@ int main()
 	px = (x0 + X[N]) / 2;
 	py = (y0 + Y[N]) / 2;
 
-	cout << "Mitte: (" << px << "," << py << ")" << endl;
-	cout << "(X[N],Y[N]): (" << X[N] << "," << Y[N] << ")" << endl;
+	cout << "Mittelpunkt = (px,py) = (" << px << "," << py << ")" << endl;
+	cout << "xn = " << xn << endl;
+	cout << "x(N) = " << X[N] << endl;
+	cout << "xn-x(N) = " << xn - X[N] << endl;
 
 	// 2.1 f)
 	double Winkel[N+1], Radius[N+1];
 
 	double a_x = x0 - px;
 	double a_y = y0 - py;
+
+	fstream file1;
+	file1.open("tabelle.txt", ios::out);
+
 	for (int i = 0; i <= N; i++) {
 		Radius[i] = sqrt((px - X[i])*(px - X[i]) + (py-Y[i])*(py-Y[i]));
 		double b_x = X[i] - px;
 		double b_y = X[i] - py;
 		Winkel[i] = acos((a_x * b_x + a_y * b_y) / (Radius[i]*d/2)) * (180/PI);
+
+		file1 << setw(3) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(5) << setprecision(0)  << Fcnt[i] << endl;
 	}
 
-	// 2.2 Ausgabe
-
-	cout << "f(x) = " << f_name << "; N = " << N << "; x0 = " << x0 << "; d = " << d << endl;
-	
+	file1.close();
 
 	return 0;
 }
