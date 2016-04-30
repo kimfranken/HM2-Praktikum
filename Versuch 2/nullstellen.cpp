@@ -259,7 +259,7 @@ int main()
 	cout << "Mittelpunkt = (px,py) = (" << px << "," << py << ")" << endl;
 	cout << "xn = " << xn << endl;
 	cout << "x(N) = " << X[N] << endl;
-	cout << "xn-x(N) = " << xn - X[N] << endl;
+	cout << "xn-x(N) = " << xn - X[N] << endl << endl;
 
 	// 2.1 f)
 	double Winkel[N+1], Radius[N+1];
@@ -269,8 +269,12 @@ int main()
 	Winkel[0] = 0;
 	Winkel[N] = 180;
 
-	fstream file1;
+	fstream file1, file2;
 	file1.open("tabelle.txt", ios::out);
+	file2.open("tabelle_winkel.txt", ios::out);
+
+
+	cout << setw(4) << "Nr." << fixed << setw(WIDTH) << setprecision(PREC) << "x-Koord." << setw(WIDTH) << "y-Koord." << setw(WIDTH) << "x-Start_1" << setw(WIDTH) << "x-Start_2" << setw(5) << setprecision(0) << "fcnt" << setw(4) << "Its" << setw(WIDTH) << setprecision(PREC) << "Winkel" << setw(WIDTH) << "Radius" << endl;
 
 	for (int i = 0; i <= N; i++) {
 		Radius[i] = sqrt((px - X[i])*(px - X[i]) + (py-Y[i])*(py-Y[i]));
@@ -281,9 +285,14 @@ int main()
 			Winkel[i] = acos(((a_x * b_x) + (a_y * b_y)) / (Radius[i]*d/2)) * (180.0 / PI);
 		}
 
-		file1 << setw(3) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(4) << setprecision(0) << Fcnt[i] << setw(4) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << endl;
+		cout << setw(4) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(5) << setprecision(0) << Fcnt[i] << setw(4) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << endl;
+
+		file1 << setw(4) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(5) << setprecision(0) << Fcnt[i] << setw(4) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << endl;
+
+		file2 << fixed << setw(WIDTH) << setprecision(PREC) << px << setw(WIDTH) << py << setw(WIDTH) << X[i] - px << setw(WIDTH) << Y[i] - py << endl;
 	}
 
+	file2.close();
 	file1.close();
 
 	return 0;
