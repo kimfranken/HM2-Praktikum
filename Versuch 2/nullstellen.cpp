@@ -158,7 +158,7 @@ double romberg_newton(double x){
 
 int main()
 {
-	// 2.1 a)
+	// 2.1 a) ##############################################################
   double y0, xn, yn;
   cout << "(1) ln(x)"<< endl;
   cout << "(2) (x-2)^2"<< endl;
@@ -204,19 +204,17 @@ int main()
 		return 1;
 	}
 
-	// 2.1 b)
+	// 2.1 b) ##############################################################
   y0 = f(x0);
-	// cout << "(x0,y0): (" << x0 << "," << y0 << ")" << endl;
-
-  xn = newton(x0 + d, euklid, euklid_ab);
+  xn = newton(x0 + d, euklid, euklid_ab); // Startwert x0 + d,
   yn = f(xn);
-
 
 	cout << endl << "f(x) = " << f_name << "; N = " << N << "; x0 = " << x0 << "; d = " << d << endl;
 	cout << "Endpunkt = (xn,yn) = (" << xn << "," << yn << "); Startwert = " << x0 + d << "; Its = " << its << endl;
 
-  // cout << "d:" << sqrt((x0-xn)*(x0-xn) + (y0-yn)*(y0-yn)) << endl; // Testen ob d richtig ist
+  //cout << "d:" << sqrt((x0-xn)*(x0-xn) + (y0-yn)*(y0-yn)) << endl; // Testen ob d richtig ist
 
+	// 2.1 c) ##############################################################
   xk = x0;
   int L_out;
   double rc = Romberg(bogenlaenge_integrant, xk, xn, tol, 20, L_out, fcnt, bogenlaenge);
@@ -224,7 +222,6 @@ int main()
 
 	cout << "B(f;x0,xn) = " << bogenlaenge << "; Fehlertoleranz = " << tol << endl;
 
-	// 2.1 c)
 	double X[N+1], Y[N+1], X_Start_1[N+1], X_Start_2[N+1], Fcnt[N+1], Its[N+1];
 	X[0] = x0;
 	Y[0] = y0;
@@ -239,7 +236,7 @@ int main()
 
 		// x_dach berechnen mit Pythagoras und Steigung
 		double m = (f(x_quer) - f(X[i])) / (x_quer - X[i]);
-		double x_dach = X[i] + bogenstuecklaenge/sqrt(1 + m*m); // evtl noch falsch!
+		double x_dach = X[i] + bogenstuecklaenge/sqrt(1 + m*m);
 
 		X[i+1] = newton(x_dach, romberg_newton, bogenlaenge_integrant);
 		Y[i+1] = f(X[i+1]);
@@ -251,7 +248,7 @@ int main()
 		X_Start_2[i+1] = x_dach;
 	}
 
-	// 2.1 e)
+	// 2.1 d - e) ##########################################################
 	double px, py;
 	px = (x0 + X[N]) / 2;
 	py = (y0 + Y[N]) / 2;
@@ -261,7 +258,7 @@ int main()
 	cout << "x(N) = " << X[N] << endl;
 	cout << "xn-x(N) = " << xn - X[N] << endl << endl;
 
-	// 2.1 f)
+	// 2.1 f) ##############################################################
 	double Winkel[N+1], Radius[N+1];
 	double a_x = x0 - px;
 	double a_y = y0 - py;
