@@ -18,4 +18,4 @@ set grid
 set style data linespoints
 
 set title "f(x)"
-plot "tabelle.txt" using 2:3, "tabelle_winkel.txt" using 1:2:3:4 with vectors nohead
+plot ln(x), "tabelle_winkel.txt" using 1:2:3:4 with vectors nohead
