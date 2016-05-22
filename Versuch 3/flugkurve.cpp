@@ -1,7 +1,7 @@
-// P3_2015.cpp : Definiert den Einstiegspunkt für die Konsolenanwendung.
+// P3_2015.cpp : Definiert den Einstiegspunkt fÃ¼r die Konsolenanwendung.
 //
 
-#include "stdafx.h"
+// #include "stdafx.h" remove since it is not found
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -20,18 +20,62 @@ int spline(int n, double *x, double *y, double marg_0, double marg_n, int marg_c
 double spval(int n, double x0, double *a, double *b, double *c, double *d, double *x, double *ausg);
 void datenlesen(vector<double> &t, vector<double>&x, vector<double> &y, vector<double> &z);
 
+int n;
+vector<double> t, x, y, z;
+vector<double> xb, xc, xd, yb, yc, yd, zb, zc, zd;
+
+double laenge(double x0){
+	double sx[3], sy[3], sz[3];
+	spval(n, x0, &x[0], &xb[0], &xc[0], &xd[0], &t[0], sx);
+	spval(n, x0, &y[0], &yb[0], &yc[0], &yd[0], &t[0], sy);
+	spval(n, x0, &z[0], &zb[0], &zc[0], &zd[0], &t[0], sz);
+
+	return sqrt(sx[0]*sx[0] + sy[0]*sy[0] + sz[0]*sz[0]);
+}
+
 int main(void)
 {
 	fstream file1;
 	file1.open("Flug_testen.txt", ios::out);
-	file1 << "Heute ist schönes Wetter" << endl;
+	file1 << "Heute ist schÃ¶nes Wetter" << endl;
 	file1.close();
 
-	
-	vector<double> t, x, y, z;
 	datenlesen(t, x, y, z);
 	// an dieser Stelle das Hauptprogramm einfuegen !!
 
+	n = t.size();
+	xb.resize(n);
+	xc.resize(n);
+	xd.resize(n);
+	yb.resize(n);
+	yc.resize(n);
+	yd.resize(n);
+	zb.resize(n);
+	zc.resize(n);
+	zd.resize(n);
+
+	spline (n, &t[0], &x[0], 0, 0, 2, &xb[0], &xc[0], &xd[0]);
+	spline (n, &t[0], &y[0], 0, 0, 2, &yb[0], &yc[0], &yd[0]);
+	spline (n, &t[0], &z[0], 0, 0, 2, &zb[0], &zc[0], &zd[0]);
+
+	double ta, tb;
+	cout << "ta eingeben: ";
+	cin >> ta;
+	ta = ta*3600;
+	cout << "tb eingeben: ";
+	cin >> tb;
+	tb = tb*3600;
+
+	if(ta >= tb){
+		cout << "Fehler: ta muss groesser als tb sein! ta und tb wurden auf die globalen Intervallgrenzen gesetzt" << endl;
+		ta = t[0];
+		tb = t[n-1];
+	}
+
+	int L_out, fcnt;
+	double Q, E;
+
+	Romberg_3(laenge, ta, tb, 1e-14, 20, L_out, fcnt, Q, E);
 
 }
 
@@ -43,7 +87,7 @@ void datenlesen(vector<double> &t, vector<double>&x, vector<double> &y, vector<d
 	char inputFilename[] = "Flug_txyz.txt";
 	file.open(inputFilename, ios::in);
 	if (!file) {
-		cerr << "Eingabe-File " << inputFilename << " kann nicht geöffnet werden!" << endl;
+		cerr << "Eingabe-File " << inputFilename << " kann nicht geÃ¶ffnet werden!" << endl;
 		cout << " Gib irgendeine Zahl ein (Modul:datenlesen)" << endl;
 		cin >> tb;
 		exit(1);
@@ -332,7 +376,7 @@ double spval(int n, double x0, double *a, double *b, double *c, double *d, doubl
 
 /* ----------------------------- Modul Romberg_3 ---------------------------------- */
 int Romberg_3(double(*f)(double), double a, double b, double tol, int L_in, int &L_out, int &fcnt, double &Q, double &E){
-	/* Näherungsweise Berechnung des Integrals über f von a bis b: I(f;a,b)
+	/* Nï¿½herungsweise Berechnung des Integrals ï¿½ber f von a bis b: I(f;a,b)
 	% mit dem Romberg-Schema mit max. L_in Stufen.
 	%
 	% Eingabe:
@@ -342,22 +386,22 @@ int Romberg_3(double(*f)(double), double a, double b, double tol, int L_in, int 
 	% tol  : reelle Zahl; Genauigkeitstoleranz: |I(f;a,b)-Q|<=tol*(1+|Q|)
 	% L_in : Integer; max. Anzahl Stufen im Romberg-Schema
 	% Ausgabe:
-	% rc    : Integer; rc=0; Q wurde in gewünschter Genauigkeit berechnet.
-	%                  rc=1; Q ist nicht genau genug. Es würden evtl. mehr Stufen (als L_in) benötigt.
+	% rc    : Integer; rc=0; Q wurde in gewï¿½nschter Genauigkeit berechnet.
+	%                  rc=1; Q ist nicht genau genug. Es wï¿½rden evtl. mehr Stufen (als L_in) benï¿½tigt.
 	%                  rc=2; Eingabefehler: tol <=0
 	%
 	% L_out : Integer; Anzahl genutzter Stufen
 	% fcnt  : Integer; Anzahl Funktionsauswertungen des Integranden
-	% Q     : reelle Zahl; Näherungswert für das Integral I(f;a,b)
-	% E     : reelle Zahl; Fehlerschätzung zu Q
+	% Q     : reelle Zahl; Nï¿½herungswert fï¿½r das Integral I(f;a,b)
+	% E     : reelle Zahl; Fehlerschï¿½tzung zu Q
 	%------- R. Reuter ----- 20.05.2015 --------------------------------------*/
 	double Q1 = 0., h = 0., ah = 0.;
-	int n = 10; // Anzahl initialer Teilintervalle für ST-Formel
+	int n = 10; // Anzahl initialer Teilintervalle fï¿½r ST-Formel
 	int rc = 1; // Return Code
 	double Fak = 1.0;
 	int Lmax = L_in; // max. Anzahl Stufen
 	int L = 0;
-	double *QQ = new double[Lmax + 1]; // Array zum Speichern der jeweils aktuellen Zeile 
+	double *QQ = new double[Lmax + 1]; // Array zum Speichern der jeweils aktuellen Zeile
 	// des Romberg-Schemas
 	fcnt = 0;
 	if (tol <= 0.){
@@ -406,5 +450,3 @@ int Romberg_3(double(*f)(double), double a, double b, double tol, int L_in, int 
 	return rc;
 }
 /* ----------------------------- Ende Romberg_3 ---------------------------------- */
-
-
