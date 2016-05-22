@@ -101,6 +101,8 @@ double f(double x){
       return cosh(x);
     case 4:
       return sqrt(x);
+		case 5:
+			return x*x;
   }
 }
 
@@ -114,6 +116,8 @@ double d1f(double x){
       return sinh(x);
     case 4:
       return 1/(2*sqrt(x));
+		case 5:
+			return 2*x;
   }
 }
 
@@ -156,6 +160,14 @@ double romberg_newton(double x){
 	return Q - bogenstuecklaenge;
 }
 
+double b_test(double x1, double x2){
+	double Q, rc;
+	int L_out, fcnt;
+
+	rc = Romberg(bogenlaenge_integrant, x1, x2, tol, 20, L_out, fcnt, Q);
+	return Q;
+}
+
 int main()
 {
 	// 2.1 a) ##############################################################
@@ -163,7 +175,9 @@ int main()
   cout << "(1) ln(x)"<< endl;
   cout << "(2) (x-2)^2"<< endl;
   cout << "(3) cosh(x)"<< endl;
-  cout << "(4) sqrt(x)"<< endl << endl;
+  cout << "(4) sqrt(x)"<< endl;
+	cout << "(5) Neue Funktion"<< endl << endl;
+
   cout << "Funktion durch Eingabe der jeweiligen Nummer wählen: ";
   cin >> f_nummer;
   switch (f_nummer) {
@@ -179,6 +193,9 @@ int main()
     case 4:
       f_name = "sqrt(x)";
 			break;
+		case 5:
+			f_name = "neue Funktion";
+			break;
 		case 0:
 			f_name = "ln(x)";
 			break;
@@ -191,7 +208,7 @@ int main()
 		N = 18;
 		f_nummer = 1;
 	}
-	else if (f_nummer > 0 && f_nummer < 5){
+	else if (f_nummer > 0 && f_nummer < 6){
 		cout << "Abstand d eingeben: ";
 	  cin >> d;
 	  cout << "Startwert x0 eingeben: ";
@@ -217,7 +234,7 @@ int main()
 	// 2.1 c) ##############################################################
   xk = x0;
   int L_out;
-  double rc = Romberg(bogenlaenge_integrant, xk, xn, tol, 20, L_out, fcnt, bogenlaenge);
+  double rc = Romberg(bogenlaenge_integrant, x0, xn, tol, 20, L_out, fcnt, bogenlaenge);
   bogenstuecklaenge = bogenlaenge/N;
 
 	cout << "B(f;x0,xn) = " << bogenlaenge << "; Fehlertoleranz = " << tol << endl;
@@ -227,7 +244,8 @@ int main()
 	Y[0] = y0;
 	X_Start_1[0] = x0;
 	X_Start_2[0] = x0;
-	Fcnt[0], Its[0] = 0;
+	Fcnt[0] = 0;
+	Its[0] = 0;
 
 	for (int i = 0; i < N; i++) {
 		// x_quer berechnen mit Pythagoras und Steigung
@@ -242,6 +260,7 @@ int main()
 		Y[i+1] = f(X[i+1]);
 		xk = X[i + 1]; // für romberg_newton setzten
 
+		// Werte für Tabelle speichern
 		Fcnt[i+1] = fcnt;
 		Its[i+1] = its;
 		X_Start_1[i+1] = x_quer;
@@ -282,9 +301,9 @@ int main()
 			Winkel[i] = acos(((a_x * b_x) + (a_y * b_y)) / (Radius[i]*d/2)) * (180.0 / PI);
 		}
 
-		cout << setw(4) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(5) << setprecision(0) << Fcnt[i] << setw(4) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << endl;
+		cout << setw(4) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(6) << setprecision(0) << Fcnt[i] << setw(4) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << setw(WIDTH) << b_test(X[i], X[i+1]) << endl;
 
-		file1 << setw(4) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(5) << setprecision(0) << Fcnt[i] << setw(4) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << endl;
+		file1 << setw(4) << i << fixed << setw(WIDTH) << setprecision(PREC) << X[i] << setw(WIDTH) << Y[i] << setw(WIDTH) << X_Start_1[i] << setw(WIDTH) << X_Start_2[i] << setw(6) << setprecision(0) << Fcnt[i] << setw(4) << Its[i] << setw(WIDTH) << setprecision(PREC) << Winkel[i] << setw(WIDTH) << Radius[i] << endl;
 
 		file2 << fixed << setw(WIDTH) << setprecision(PREC) << px << setw(WIDTH) << py << setw(WIDTH) << X[i] - px << setw(WIDTH) << Y[i] - py << endl;
 	}
