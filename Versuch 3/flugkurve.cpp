@@ -54,9 +54,9 @@ int main(void)
 	zc.resize(n);
 	zd.resize(n);
 
-	spline (n, &t[0], &x[0], 0, 0, 2, &xb[0], &xc[0], &xd[0]);
-	spline (n, &t[0], &y[0], 0, 0, 2, &yb[0], &yc[0], &yd[0]);
-	spline (n, &t[0], &z[0], 0, 0, 2, &zb[0], &zc[0], &zd[0]);
+	spline(n, &t[0], &x[0], 0, 0, 2, &xb[0], &xc[0], &xd[0]);
+	spline(n, &t[0], &y[0], 0, 0, 2, &yb[0], &yc[0], &yd[0]);
+	spline(n, &t[0], &z[0], 0, 0, 2, &zb[0], &zc[0], &zd[0]);
 
 	double ta, tb;
 	cout << "ta eingeben: ";
