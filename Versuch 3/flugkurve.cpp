@@ -54,6 +54,12 @@ int main(void)
 	zc.resize(n);
 	zd.resize(n);
 
+	cout << "Der Flug dauert von t0=" << t[0]/3600 << " h bis tn=" << t[n-1]/3600 << " h" << endl;
+	cout << "Welcher Zeitabschnitt soll gezeigt werden?" << endl;
+	cout << "Gib ein Zeitintervall (in Stunden) ein!" << endl;
+	cout << "(Eingabe [0,0] -> Gesamtintervall [t0,tn] !)" << endl << endl;
+
+
 	spline(n, &t[0], &x[0], 0, 0, 2, &xb[0], &xc[0], &xd[0]);
 	spline(n, &t[0], &y[0], 0, 0, 2, &yb[0], &yc[0], &yd[0]);
 	spline(n, &t[0], &z[0], 0, 0, 2, &zb[0], &zc[0], &zd[0]);
@@ -61,24 +67,43 @@ int main(void)
 	double ta, tb;
 	cout << "ta eingeben: ";
 	cin >> ta;
-	ta = ta*3600;
 	cout << "tb eingeben: ";
 	cin >> tb;
+
+	ta = ta*3600;
 	tb = tb*3600;
 
-	if(tb >= t[n-1]){
+	if(tb == 0 || tb > t[n-1]){
 		tb = t[n-1];
 	}
 	if(ta >= tb){
-		cout << "Fehler: ta muss groesser als tb sein! ta und tb wurden auf die globalen Intervallgrenzen gesetzt" << endl;
-		ta = t[0];
-		tb = t[n-1];
+		cout << "Fehler: ta muss groesser als tb sein!" << endl;
+		return -1;
 	}
+
+	cout << endl << "Eingabe: [ta, tb] = [" << ta/3600 << ", " << tb/3600 << "] h" << endl;
 
 	int L_out, fcnt;
 	double Q, E;
 
 	int rc = Romberg_3(laenge, ta, tb, 1e-14, 20, L_out, fcnt, Q, E);
+
+	double polygonzug = 0;
+	int tk = 0;
+	int tl = n-1;
+
+	for(int i = 1; i < n; i++){
+		if (ta <= t[i] && ta >= t[i - 1] && ta != 0) tk = i;
+		if (tb <= t[i] && tb >= t[i - 1] && tb != 0) tl = i;
+	}
+
+	for (int i = tk; i < tl; i++) {
+		polygonzug = polygonzug + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
+	}
+
+	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(13) << Q << " km" << endl;
+	cout << "...  zugehoerige Fehlerschaetzung = " << scientific << E << " km" << endl;
+	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(13) << polygonzug << " km" << endl;
 
 }
 
