@@ -66,6 +66,9 @@ int main(void)
 	cin >> tb;
 	tb = tb*3600;
 
+	if(tb >= t[n-1]){
+		tb = t[n-1];
+	}
 	if(ta >= tb){
 		cout << "Fehler: ta muss groesser als tb sein! ta und tb wurden auf die globalen Intervallgrenzen gesetzt" << endl;
 		ta = t[0];
@@ -75,7 +78,7 @@ int main(void)
 	int L_out, fcnt;
 	double Q, E;
 
-	Romberg_3(laenge, ta, tb, 1e-14, 20, L_out, fcnt, Q, E);
+	int rc = Romberg_3(laenge, ta, tb, 1e-14, 20, L_out, fcnt, Q, E);
 
 }
 
