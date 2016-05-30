@@ -89,21 +89,28 @@ int main(void)
 	int rc = Romberg_3(laenge, ta, tb, 1e-14, 20, L_out, fcnt, Q, E);
 
 	double polygonzug = 0;
-	int tk = 0;
-	int tl = n-1;
+	int i_tk = 0;
+	int i_tl = n-1;
 
 	for(int i = 1; i < n; i++){
-		if (ta <= t[i] && ta >= t[i - 1] && ta != 0) tk = i;
-		if (tb <= t[i] && tb >= t[i - 1] && tb != 0) tl = i;
+		if (ta <= t[i] && ta >= t[i - 1] && ta != 0) i_tk = i;
+		if (tb <= t[i] && tb >= t[i - 1] && tb != t[n-1]) i_tl = i-1;
 	}
 
-	for (int i = tk; i < tl; i++) {
+	for (int i = i_tk; i < i_tl; i++) {
 		polygonzug = polygonzug + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
 	}
 
-	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(13) << Q << " km" << endl;
+	if(ta != 0){
+		// Startstück dazu addieren!
+	}
+	if(tb != t[n-1]){
+		// Endstück dazu addieren!
+	}
+
+	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(11) << Q << " km" << endl;
 	cout << "...  zugehoerige Fehlerschaetzung = " << scientific << E << " km" << endl;
-	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(13) << polygonzug << " km" << endl;
+	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(11) << polygonzug << " km" << endl;
 
 }
 
