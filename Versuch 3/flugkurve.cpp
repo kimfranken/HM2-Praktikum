@@ -93,19 +93,47 @@ int main(void)
 	int i_tl = n-1;
 
 	for(int i = 1; i < n; i++){
-		if (ta <= t[i] && ta >= t[i - 1] && ta != 0) i_tk = i;
-		if (tb <= t[i] && tb >= t[i - 1] && tb != t[n-1]) i_tl = i-1;
+		if (ta <= t[i] && ta >= t[i-1] && ta != t[0]){
+			i_tk = i;
+			// Startstück dazu addieren!
+			double m_x = (x[i] - x[i-1])/(t[i] - t[i-1]);
+			double m_y = (y[i] - y[i-1])/(t[i] - t[i-1]);
+			double m_z = (z[i] - z[i-1])/(t[i] - t[i-1]);
+
+			double b_x = x[i] - m_x*t[i];
+			double b_y = y[i] - m_y*t[i];
+			double b_z = z[i] - m_z*t[i];
+
+			double x_ta = m_x*ta + b_x;
+			double y_ta = m_y*ta + b_y;
+			double z_ta = m_z*ta + b_z;
+
+			polygonzug += sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) );
+			cout << polygonzug <<endl;
+
+		}
+		if (tb <= t[i] && tb >= t[i-1] && tb != t[n-1]){
+			i_tl = i-1;
+			// Endstück dazu addieren!
+			double m_x = (x[i] - x[i-1])/(t[i] - t[i-1]);
+			double m_y = (y[i] - y[i-1])/(t[i] - t[i-1]);
+			double m_z = (z[i] - z[i-1])/(t[i] - t[i-1]);
+
+			double b_x = x[i] - m_x*t[i];
+			double b_y = y[i] - m_y*t[i];
+			double b_z = z[i] - m_z*t[i];
+
+			double x_tb = m_x*tb + b_x;
+			double y_tb = m_y*tb + b_y;
+			double z_tb = m_z*tb + b_z;
+
+			polygonzug += sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) );
+			cout << polygonzug <<endl;
+		}
 	}
 
 	for (int i = i_tk; i < i_tl; i++) {
 		polygonzug = polygonzug + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
-	}
-
-	if(ta != 0){
-		// Startstück dazu addieren!
-	}
-	if(tb != t[n-1]){
-		// Endstück dazu addieren!
 	}
 
 	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(11) << Q << " km" << endl;
