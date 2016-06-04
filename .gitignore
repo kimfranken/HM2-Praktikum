@@ -52,6 +52,7 @@ Temporary Items
 # Output Files
 *.exe
 *.out
+s_*.txt
 build/
 
 *.pdf
