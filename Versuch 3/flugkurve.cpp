@@ -14,7 +14,7 @@
 #include <string>
 
 #define CONST_m 8
-#define WIDTH 14
+#define WIDTH 20
 #define PREC 15
 
 using namespace std;
@@ -163,11 +163,11 @@ int main(void)
 		s_x[i] = spval(n, ti, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
 		s_y[i] = spval(n, ti, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
 		s_z[i] = spval(n, ti, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
-		fx << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << s_x[i] << endl;
-		fy << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << s_y[i] << endl;
-		fz << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << s_z[i] << endl;
+		fx << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << setw(WIDTH) << s_x[i] << endl;
+		fy << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << setw(WIDTH) << s_y[i] << endl;
+		fz << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << setw(WIDTH) << s_z[i] << endl;
 
-		fxyz << setprecision(PREC) << fixed << setw(WIDTH) << s_x[i] << s_y[i] << s_z[i] << endl;
+		fxyz << setprecision(PREC) << fixed << setw(WIDTH) << s_x[i] << setw(WIDTH) << s_y[i] << setw(WIDTH) << s_z[i] << endl;
 
 		ti = ti + abstand;
 	}
