@@ -13,6 +13,8 @@
 #include <vector>
 #include <string>
 
+#define CONST_m 8
+
 using namespace std;
 
 int Romberg_3(double(*f)(double), double a, double b, double tol, int L_in, int &L_out, int &fcnt, double &Q, double &E);
@@ -131,9 +133,23 @@ int main(void)
 		polygonzug = polygonzug + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
 	}
 
-	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(11) << Q << " km" << endl;
+	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(12) << Q << " km" << endl;
 	cout << "...  zugehoerige Fehlerschaetzung = " << scientific << E << " km" << endl;
-	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(11) << polygonzug << " km" << endl;
+	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(12) << polygonzug << " km" << endl;
+
+	// START DATEIEN SCHREIBEN
+
+	int M = CONST_m * (n+1) * (tb - ta)/(t[n-1] - t[0]); // n-1 oder array eins größer machen???
+	double abstand = (tb - ta)/M;
+	vector<double> s_x[M], s_y[M], s_z[M];
+
+	fstream f_x, f_y, f_z, f_xyz;
+	f_x.open("s_x.txt");
+	f_y.open("s_y.txt"):
+	f_z.open("s_z.txt");
+	f_xyz.open("s_xyz.txt");
+
+	// ENDE DATEIEN SCHREIBEN
 
 }
 
