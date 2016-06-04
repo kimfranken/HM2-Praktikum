@@ -150,10 +150,10 @@ int main(void)
 	s_z.resize(M);
 
 	fstream fx, fy, fz, fxyz;
-	fx.open("s_x.txt");
-	fy.open("s_y.txt");
-	fz.open("s_z.txt");
-	fxyz.open("s_xyz.txt");
+	fx.open("s_x.txt", ios::out);
+	fy.open("s_y.txt", ios::out);
+	fz.open("s_z.txt", ios::out);
+	fxyz.open("s_xyz.txt", ios::out);
 
 	double ausg[3];
 	double ti = ta;
