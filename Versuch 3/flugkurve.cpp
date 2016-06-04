@@ -59,7 +59,6 @@ int main(void)
 	cout << "Gib ein Zeitintervall (in Stunden) ein!" << endl;
 	cout << "(Eingabe [0,0] -> Gesamtintervall [t0,tn] !)" << endl << endl;
 
-
 	spline(n, &t[0], &x[0], 0, 0, 2, &xb[0], &xc[0], &xd[0]);
 	spline(n, &t[0], &y[0], 0, 0, 2, &yb[0], &yc[0], &yd[0]);
 	spline(n, &t[0], &z[0], 0, 0, 2, &zb[0], &zc[0], &zd[0]);
@@ -88,7 +87,6 @@ int main(void)
 
 	int rc = Romberg_3(laenge, ta, tb, 1e-14, 20, L_out, fcnt, Q, E);
 
-	double polygonzug = 0;
 	double polygonzug2 = 0;
 	int i_tk = 0;
 	int i_tl = n-1;
@@ -97,24 +95,6 @@ int main(void)
 		if (ta <= t[i] && ta >= t[i-1] && ta != t[0]){
 			i_tk = i;
 			// Startstück dazu addieren!
-
-			// START Koor(ta) mit Geradengleichung
-			double m_x = (x[i] - x[i-1])/(t[i] - t[i-1]);
-			double m_y = (y[i] - y[i-1])/(t[i] - t[i-1]);
-			double m_z = (z[i] - z[i-1])/(t[i] - t[i-1]);
-
-			double b_x = x[i] - m_x*t[i];
-			double b_y = y[i] - m_y*t[i];
-			double b_z = z[i] - m_z*t[i];
-
-			double x_ta = m_x*ta + b_x;
-			double y_ta = m_y*ta + b_y;
-			double z_ta = m_z*ta + b_z;
-
-			cout << x_ta << "/" << y_ta << "/" << z_ta << endl;
-			cout << sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) ) << endl;
-			polygonzug += sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) );
-			// ENDE Koor(ta) mit Geradengleichung
 
 			// START Koor(ta) mit spval
 			double ausg[3];
@@ -133,25 +113,6 @@ int main(void)
 			i_tl = i-1;
 			// Endstück dazu addieren!
 
-			// START Koor(tb) mit Geradengleichung
-			double m_x = (x[i] - x[i-1])/(t[i] - t[i-1]);
-			double m_y = (y[i] - y[i-1])/(t[i] - t[i-1]);
-			double m_z = (z[i] - z[i-1])/(t[i] - t[i-1]);
-
-			double b_x = x[i] - m_x*t[i];
-			double b_y = y[i] - m_y*t[i];
-			double b_z = z[i] - m_z*t[i];
-
-			double x_tb = m_x*tb + b_x;
-			double y_tb = m_y*tb + b_y;
-			double z_tb = m_z*tb + b_z;
-
-			cout << x_tb << "/" << y_tb << "/" << z_tb << endl;
-			cout << sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) ) << endl;
-
-			polygonzug += sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) );
-			// ENDE Koor(tb) mit Geradengleichung
-
 			// START Koor(tb) mit spval
 			double ausg[3];
 			double x_tb2 = spval(n, tb, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
@@ -167,13 +128,11 @@ int main(void)
 	}
 
 	for (int i = i_tk; i < i_tl; i++) {
-		polygonzug = polygonzug + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
 		polygonzug2 = polygonzug2 + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
 	}
 
 	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(11) << Q << " km" << endl;
 	cout << "...  zugehoerige Fehlerschaetzung = " << scientific << E << " km" << endl;
-	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(11) << polygonzug << " km" << endl;
 	cout << setprecision(0) << fixed << "Laenge des Polygonzug2 in [ta,tb] = " << setprecision(11) << polygonzug2 << " km" << endl;
 
 }
