@@ -14,6 +14,8 @@
 #include <string>
 
 #define CONST_m 8
+#define WIDTH 14
+#define PREC 15
 
 using namespace std;
 
@@ -137,19 +139,45 @@ int main(void)
 	cout << "...  zugehoerige Fehlerschaetzung = " << scientific << E << " km" << endl;
 	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(12) << polygonzug << " km" << endl;
 
-	// START DATEIEN SCHREIBEN
+	// START DATEN SCHREIBEN
 
 	int M = CONST_m * (n+1) * (tb - ta)/(t[n-1] - t[0]); // n-1 oder array eins größer machen???
 	double abstand = (tb - ta)/M;
-	vector<double> s_x[M], s_y[M], s_z[M];
 
-	fstream f_x, f_y, f_z, f_xyz;
-	f_x.open("s_x.txt");
-	f_y.open("s_y.txt"):
-	f_z.open("s_z.txt");
-	f_xyz.open("s_xyz.txt");
+	vector<double> s_x, s_y, s_z;
+	s_x.resize(M);
+	s_y.resize(M);
+	s_z.resize(M);
 
-	// ENDE DATEIEN SCHREIBEN
+	fstream fx, fy, fz, fxyz;
+	fx.open("s_x.txt");
+	fy.open("s_y.txt");
+	fz.open("s_z.txt");
+	fxyz.open("s_xyz.txt");
+
+	double ausg[3];
+	double ti = ta;
+
+	for (int i = 0; i < M; i++) {
+		cout << ti << endl;
+		s_x[i] = spval(n, ti, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
+		s_y[i] = spval(n, ti, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
+		s_z[i] = spval(n, ti, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
+		fx << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << s_x[i] << endl;
+		fy << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << s_y[i] << endl;
+		fz << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << s_z[i] << endl;
+
+		fxyz << setprecision(PREC) << fixed << setw(WIDTH) << s_x[i] << s_y[i] << s_z[i] << endl;
+
+		ti = ti + abstand;
+	}
+
+	fx.close();
+	fy.close();
+	fz.close();
+	fxyz.close();
+
+	// ENDE DATEN SCHREIBEN
 
 }
 
