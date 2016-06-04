@@ -159,7 +159,6 @@ int main(void)
 	double ti = ta;
 
 	for (int i = 0; i < M; i++) {
-		cout << ti << endl;
 		s_x[i] = spval(n, ti, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
 		s_y[i] = spval(n, ti, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
 		s_z[i] = spval(n, ti, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
@@ -176,6 +175,8 @@ int main(void)
 	fy.close();
 	fz.close();
 	fxyz.close();
+
+	cout << endl << "Beendet" << endl;
 
 	// ENDE DATEN SCHREIBEN
 
