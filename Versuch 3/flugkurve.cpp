@@ -13,6 +13,8 @@
 #include <vector>
 #include <string>
 
+#include <ctime>
+
 #define CONST_m 8
 #define WIDTH 20
 #define PREC 15
@@ -99,12 +101,12 @@ int main(void)
 	int i_tk = 0;
 	int i_tl = n-1;
 
-	for(int i = 1; i < n; i++){
+	for(int i = 1; i <= n; i++){
+
+		// tk finden, Polygonzug von ta zu tk berechnen
 		if (ta <= t[i] && ta >= t[i-1] && ta != t[0]){
 			i_tk = i;
-			// Startstück dazu addieren!
 
-			// START Koor(ta) mit spval
 			double ausg[3];
 			double x_ta = spval(n, ta, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
 			double y_ta = spval(n, ta, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
@@ -114,14 +116,12 @@ int main(void)
 			// cout << sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) ) << endl;
 
 			polygonzug += sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) );
-			// ENDE Koor(ta) mit spval
-
 		}
+
+		// tl finden, Polygonzug von tl zu tb berechnen
 		if (tb <= t[i] && tb >= t[i-1] && tb != t[n-1]){
 			i_tl = i-1;
-			// Endstück dazu addieren!
 
-			// START Koor(tb) mit spval
 			double ausg[3];
 			double x_tb = spval(n, tb, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
 			double y_tb = spval(n, tb, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
@@ -131,10 +131,10 @@ int main(void)
 			// cout << sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) ) << endl;
 
 			polygonzug += sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) );
-			// ENDE Koor(tb) mit spval
 		}
 	}
 
+	// Rest des Polyonzugs berechnen (tk -> tl)
 	for (int i = i_tk; i < i_tl; i++) {
 		polygonzug = polygonzug + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
 	}
@@ -168,9 +168,7 @@ int main(void)
 		fx << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << setw(WIDTH) << s_x[i] << endl;
 		fy << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << setw(WIDTH) << s_y[i] << endl;
 		fz << setprecision(PREC) << fixed << setw(WIDTH) << ti/3600 << setw(WIDTH) << s_z[i] << endl;
-
 		fxyz << setprecision(PREC) << fixed << setw(WIDTH) << s_x[i] << setw(WIDTH) << s_y[i] << setw(WIDTH) << s_z[i] << endl;
-
 		ti = ti + abstand;
 	}
 
