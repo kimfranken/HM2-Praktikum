@@ -29,6 +29,9 @@ vector<double> t, x, y, z;
 vector<double> xb, xc, xd, yb, yc, yd, zb, zc, zd;
 
 double laenge(double x0){
+	// zu 3 d) ###################################################################
+	// spval(#Stuetzstellen, Ort d. Auswertung, Splinekoeff a, Splinekoeff b, Splinekoeff c, Splinekoeff d, Stuetzstellen, Ausgabe d. Ableitungen)
+
 	double sx[3], sy[3], sz[3];
 	spval(n, x0, &x[0], &xb[0], &xc[0], &xd[0], &t[0], sx);
 	spval(n, x0, &y[0], &yb[0], &yc[0], &yd[0], &t[0], sy);
@@ -39,14 +42,10 @@ double laenge(double x0){
 
 int main(void)
 {
-	fstream file1;
-	file1.open("Flug_testen.txt", ios::out);
-	file1 << "Heute ist schönes Wetter" << endl;
-	file1.close();
-
+	// 3a) #######################################################################
 	datenlesen(t, x, y, z);
-	// an dieser Stelle das Hauptprogramm einfuegen !!
 
+	// 3b) #######################################################################
 	n = t.size();
 	xb.resize(n);
 	xc.resize(n);
@@ -58,14 +57,17 @@ int main(void)
 	zc.resize(n);
 	zd.resize(n);
 
+	// spline(#Stuetzstellen, x-Koord, y-Koord, Randbed. in x(0), Randbed. in x(n-1), Art der Bed., Ausg b, Ausg c, Ausg d)
+	// a = y
+	spline(n, &t[0], &x[0], 0, 0, 2, &xb[0], &xc[0], &xd[0]);
+	spline(n, &t[0], &y[0], 0, 0, 2, &yb[0], &yc[0], &yd[0]);
+	spline(n, &t[0], &z[0], 0, 0, 2, &zb[0], &zc[0], &zd[0]);
+
+	// 3c) #######################################################################
 	cout << "Der Flug dauert von t0=" << t[0]/3600 << " h bis tn=" << t[n-1]/3600 << " h" << endl;
 	cout << "Welcher Zeitabschnitt soll gezeigt werden?" << endl;
 	cout << "Gib ein Zeitintervall (in Stunden) ein!" << endl;
 	cout << "(Eingabe [0,0] -> Gesamtintervall [t0,tn] !)" << endl << endl;
-
-	spline(n, &t[0], &x[0], 0, 0, 2, &xb[0], &xc[0], &xd[0]);
-	spline(n, &t[0], &y[0], 0, 0, 2, &yb[0], &yc[0], &yd[0]);
-	spline(n, &t[0], &z[0], 0, 0, 2, &zb[0], &zc[0], &zd[0]);
 
 	double ta, tb;
 	cout << "ta eingeben: ";
@@ -86,11 +88,13 @@ int main(void)
 
 	cout << endl << "Eingabe: [ta, tb] = [" << ta/3600 << ", " << tb/3600 << "] h" << endl;
 
+	// 3d) #######################################################################
 	int L_out, fcnt;
 	double Q, E;
 
 	int rc = Romberg_3(laenge, ta, tb, 1e-14, 20, L_out, fcnt, Q, E);
 
+	// 3e) #######################################################################
 	double polygonzug = 0;
 	int i_tk = 0;
 	int i_tl = n-1;
@@ -102,14 +106,14 @@ int main(void)
 
 			// START Koor(ta) mit spval
 			double ausg[3];
-			double x_ta2 = spval(n, ta, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
-			double y_ta2 = spval(n, ta, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
-			double z_ta2 = spval(n, ta, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
+			double x_ta = spval(n, ta, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
+			double y_ta = spval(n, ta, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
+			double z_ta = spval(n, ta, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
 
-			cout << x_ta2 << "/" << y_ta2 << "/" << z_ta2 << endl;
-			cout << sqrt( (x[i] - x_ta2)*(x[i] - x_ta2) + (y[i] - y_ta2)*(y[i] - y_ta2) + (z[i] - z_ta2)*(z[i] - z_ta2) ) << endl;
+			// cout << x_ta << "/" << y_ta << "/" << z_ta << endl;
+			// cout << sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) ) << endl;
 
-			polygonzug += sqrt( (x[i] - x_ta2)*(x[i] - x_ta2) + (y[i] - y_ta2)*(y[i] - y_ta2) + (z[i] - z_ta2)*(z[i] - z_ta2) );
+			polygonzug += sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) );
 			// ENDE Koor(ta) mit spval
 
 		}
@@ -119,14 +123,14 @@ int main(void)
 
 			// START Koor(tb) mit spval
 			double ausg[3];
-			double x_tb2 = spval(n, tb, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
-			double y_tb2 = spval(n, tb, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
-			double z_tb2 = spval(n, tb, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
+			double x_tb = spval(n, tb, &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg);
+			double y_tb = spval(n, tb, &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg);
+			double z_tb = spval(n, tb, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
 
-			cout << x_tb2 << "/" << y_tb2 << "/" << z_tb2 << endl;
-			cout << sqrt( (x_tb2 - x[i-1])*(x_tb2 - x[i-1]) + (y_tb2 - y[i-1])*(y_tb2 - y[i-1]) + (z_tb2 - z[i-1])*(z_tb2 - z[i-1]) ) << endl;
+			// cout << x_tb << "/" << y_tb << "/" << z_tb << endl;
+			// cout << sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) ) << endl;
 
-			polygonzug += sqrt( (x_tb2 - x[i-1])*(x_tb2 - x[i-1]) + (y_tb2 - y[i-1])*(y_tb2 - y[i-1]) + (z_tb2 - z[i-1])*(z_tb2 - z[i-1]) );
+			polygonzug += sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) );
 			// ENDE Koor(tb) mit spval
 		}
 	}
@@ -139,8 +143,7 @@ int main(void)
 	cout << "...  zugehoerige Fehlerschaetzung = " << scientific << E << " km" << endl;
 	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(12) << polygonzug << " km" << endl;
 
-	// START DATEN SCHREIBEN
-
+	// 3f) #######################################################################
 	int M = CONST_m * (n+1) * (tb - ta)/(t[n-1] - t[0]); // n-1 oder array eins größer machen???
 	double abstand = (tb - ta)/M;
 
@@ -177,9 +180,6 @@ int main(void)
 	fxyz.close();
 
 	cout << endl << "Beendet" << endl;
-
-	// ENDE DATEN SCHREIBEN
-
 }
 
 /* ----------------------------- Modul datenlesen ------------------------- */
