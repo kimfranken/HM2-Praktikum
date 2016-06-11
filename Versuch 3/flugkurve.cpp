@@ -30,14 +30,14 @@ int n;
 vector<double> t, x, y, z;
 vector<double> xb, xc, xd, yb, yc, yd, zb, zc, zd;
 
-double laenge(double x0){
+double laenge(double tt){
 	// zu 3 d) ###################################################################
 	// spval(#Stuetzstellen, Ort d. Auswertung, Splinekoeff a, Splinekoeff b, Splinekoeff c, Splinekoeff d, Stuetzstellen, Ausgabe d. Ableitungen)
 
 	double sx[3], sy[3], sz[3];
-	spval(n, x0, &x[0], &xb[0], &xc[0], &xd[0], &t[0], sx);
-	spval(n, x0, &y[0], &yb[0], &yc[0], &yd[0], &t[0], sy);
-	spval(n, x0, &z[0], &zb[0], &zc[0], &zd[0], &t[0], sz);
+	spval(n, tt, &x[0], &xb[0], &xc[0], &xd[0], &t[0], sx);
+	spval(n, tt, &y[0], &yb[0], &yc[0], &yd[0], &t[0], sy);
+	spval(n, tt, &z[0], &zb[0], &zc[0], &zd[0], &t[0], sz);
 
 	return sqrt(sx[0]*sx[0] + sy[0]*sy[0] + sz[0]*sz[0]);
 }
@@ -117,6 +117,9 @@ int main(void)
 
 	int rc = Romberg_3(laenge, ta, tb, 1e-14, 20, L_out, fcnt, Q, E);
 
+	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(12) << Q << " km" << endl;
+	cout << "...  zugehoerige Fehlerschaetzung = " << scientific << E << " km" << endl;
+
 	// 3e) #######################################################################
 	double polygonzug = 0;
 	int i_tk = 0;
@@ -160,8 +163,6 @@ int main(void)
 		polygonzug = polygonzug + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
 	}
 
-	cout << "Laenge der Flugstrecke in [ta,tb] = " << fixed << setprecision(12) << Q << " km" << endl;
-	cout << "...  zugehoerige Fehlerschaetzung = " << scientific << E << " km" << endl;
 	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(12) << polygonzug << " km" << endl;
 
 	// 3f) #######################################################################
