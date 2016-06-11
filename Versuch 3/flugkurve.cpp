@@ -42,6 +42,25 @@ double laenge(double x0){
 	return sqrt(sx[0]*sx[0] + sy[0]*sy[0] + sz[0]*sz[0]);
 }
 
+void test_koeff(){
+	cout << endl << "Test der ersten 5 Koeffizienten der Splinefunktionen" << endl;
+	cout << endl << setw(3) << "i" << setw(15) << "a_x[i]" << setw(15) << "b_x[i]" << setw(15) << "c_x[i]" << setw(15) << "d_x[i]" << endl;
+	for(int i=0; i<5; i++){
+		cout << setw(3) << i << scientific << setw(15) << x[i] << setw(15) << xb[i] << setw(15) << xc[i] << setw(15) << xd[i] << endl;
+	}
+
+	cout << endl << setw(3) << "i" << setw(15) << "a_y[i]" << setw(15) << "b_y[i]" << setw(15) << "c_y[i]" << setw(15) << "d_y[i]" << endl;
+	for(int i=0; i<5; i++){
+		cout << setw(3) << i << scientific << setw(15) << y[i] << setw(15) << yb[i] << setw(15) << yc[i] << setw(15) << yd[i] << endl;
+	}
+
+	cout << endl << setw(3) << "i" << setw(15) << "a_z[i]" << setw(15) << "b_z[i]" << setw(15) << "c_z[i]" << setw(15) << "d_z[i]" << endl;
+	for(int i=0; i<5; i++){
+		cout << setw(3) << i << scientific << setw(15) << z[i] << setw(15) << zb[i] << setw(15) << zc[i] << setw(15) << zd[i] << endl;
+	}
+	cout << fixed << endl;
+}
+
 int main(void)
 {
 	// 3a) #######################################################################
@@ -64,6 +83,8 @@ int main(void)
 	spline(n, &t[0], &x[0], 0, 0, 2, &xb[0], &xc[0], &xd[0]);
 	spline(n, &t[0], &y[0], 0, 0, 2, &yb[0], &yc[0], &yd[0]);
 	spline(n, &t[0], &z[0], 0, 0, 2, &zb[0], &zc[0], &zd[0]);
+
+	//test_koeff();
 
 	// 3c) #######################################################################
 	cout << "Der Flug dauert von t0=" << t[0]/3600 << " h bis tn=" << t[n-1]/3600 << " h" << endl;
@@ -144,7 +165,7 @@ int main(void)
 	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(12) << polygonzug << " km" << endl;
 
 	// 3f) #######################################################################
-	int M = CONST_m * (n+1) * (tb - ta)/(t[n-1] - t[0]); // n-1 oder array eins größer machen???
+	int M = CONST_m * (n+1) * (tb - ta)/(t[n-1] - t[0]);
 	double abstand = (tb - ta)/M;
 
 	vector<double> s_x, s_y, s_z;
