@@ -124,6 +124,9 @@ int main(void)
 	double polygonzug = 0;
 	int i_tk = 0;
 	int i_tl = n-1;
+	double abstand_max = 0;
+	double abstand_temp = 0;
+	int i_abstand = 0;
 
 	for(int i = 1; i <= n; i++){
 
@@ -137,7 +140,7 @@ int main(void)
 			double z_ta = spval(n, ta, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
 
 			// cout << x_ta << "/" << y_ta << "/" << z_ta << endl;
-			// cout << sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) ) << endl;
+			cout << "Polygonzug ta bis tk: " << sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) ) << endl;
 
 			polygonzug += sqrt( (x[i] - x_ta)*(x[i] - x_ta) + (y[i] - y_ta)*(y[i] - y_ta) + (z[i] - z_ta)*(z[i] - z_ta) );
 		}
@@ -152,17 +155,25 @@ int main(void)
 			double z_tb = spval(n, tb, &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg);
 
 			// cout << x_tb << "/" << y_tb << "/" << z_tb << endl;
-			// cout << sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) ) << endl;
+			cout << "Polygonzug tl bis tb: " << sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) ) << endl;
 
 			polygonzug += sqrt( (x_tb - x[i-1])*(x_tb - x[i-1]) + (y_tb - y[i-1])*(y_tb - y[i-1]) + (z_tb - z[i-1])*(z_tb - z[i-1]) );
+
 		}
 	}
 
 	// Rest des Polyonzugs berechnen (tk -> tl)
+	double polyohnestartend = 0;
 	for (int i = i_tk; i < i_tl; i++) {
 		polygonzug = polygonzug + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
+		polyohnestartend = polyohnestartend + sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
+		abstand_temp = sqrt( (x[i+1] - x[i])*(x[i+1] - x[i]) + (y[i+1] - y[i])*(y[i+1] - y[i]) + (z[i+1] - z[i])*(z[i+1] - z[i]) );
+		if (abstand_max < abstand_temp){
+			abstand_max = abstand_temp;
+			i_abstand = i;
+		}
 	}
-
+	cout << "Polygonzug ohne Start und End: " << polyohnestartend << endl;
 	cout << setprecision(0) << fixed << "Laenge des Polygonzugs in [ta,tb] = " << setprecision(12) << polygonzug << " km" << endl;
 
 	// 3f) #######################################################################
@@ -202,6 +213,13 @@ int main(void)
 	fxyz.close();
 
 	cout << endl << "Beendet" << endl;
+
+	cout << "Max. Abstand: " << abstand_max << endl;
+
+	cout << i_abstand << endl << t[i_abstand] << endl << spval(n, t[i_abstand], &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg) << endl << spval(n, t[i_abstand], &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg) << endl << spval(n, t[i_abstand], &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg) << endl << endl;
+
+	cout << i_abstand+1 << endl << t[i_abstand+1] << endl << spval(n, t[i_abstand+1], &x[0], &xb[0], &xc[0], &xd[0], &t[0], ausg) << endl << spval(n, t[i_abstand+1], &y[0], &yb[0], &yc[0], &yd[0], &t[0], ausg) << endl << spval(n, t[i_abstand+1], &z[0], &zb[0], &zc[0], &zd[0], &t[0], ausg) << endl << endl;
+
 }
 
 /* ----------------------------- Modul datenlesen ------------------------- */
